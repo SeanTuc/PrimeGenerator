@@ -6,6 +6,9 @@
 package findingprimes;
 
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,7 +33,7 @@ public class FindingPrimes extends Application {
         Button btn = new Button();
         btn.setText("Next 1000 Primes");
         this.primes.add(2);
-        
+        createTextFile();
         
         
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -38,7 +41,7 @@ public class FindingPrimes extends Application {
             @Override
             public void handle(ActionEvent event) {
                 
-                System.out.println("The next Primes!");
+                System.out.println("The next 1000 Primes!");
                 for(int i = 0; i<1000; i++){
                     do{
                         number++;
@@ -48,10 +51,7 @@ public class FindingPrimes extends Application {
                     System.out.println(number);
                 }
                 
-                
-                
-                
-                
+    
             }
         });
         
@@ -127,9 +127,42 @@ public class FindingPrimes extends Application {
     }
     
     
-    
+    // create file if doesnt exist
+    public static void createTextFile(){
+        try {
+            File primeFile = new File("PrimeNumbers.txt");
+            if (primeFile.createNewFile()) {
+                System.out.println("File created: " + primeFile.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        
+    }
     // print array to file
+    public static void savePrimesToFile(){
+        
+        try{
+            FileWriter primesWriter = new FileWriter("PrimeNumbers.txt");
+            for(int i=0; i<primes.size();i++){
+                primesWriter.write(primes.get(i));
+            }
+            primesWriter.close();
+            
+        }catch(IOException e){
+            System.out.println("An error Occured");
+            e.printStackTrace();
+        }
+            
+        
+        
+        
+    }
     
-    //read file into array
+    
+    //read file into array and set number to laregest prime
     
 }
