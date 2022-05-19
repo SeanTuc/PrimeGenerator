@@ -7,8 +7,11 @@ package findingprimes;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -33,7 +37,11 @@ public class FindingPrimes extends Application {
         Button btn = new Button();
         btn.setText("Next 1000 Primes");
         this.primes.add(2);
+        
         createTextFile();
+        loadPrimeNumbers();
+        setNumber();
+        
         
         
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -47,8 +55,10 @@ public class FindingPrimes extends Application {
                         number++;
                     }
                     while(!isPrime(number));
+                    savePrimesToFile(number);
                     
                     System.out.println(number);
+                    
                 }
                 
     
@@ -109,9 +119,7 @@ public class FindingPrimes extends Application {
             
                 
         }while(flag);
-        
-        
-        
+
         return isPrime;
     }
     
@@ -133,6 +141,7 @@ public class FindingPrimes extends Application {
             File primeFile = new File("PrimeNumbers.txt");
             if (primeFile.createNewFile()) {
                 System.out.println("File created: " + primeFile.getName());
+                savePrimesToFile(2);
             } else {
                 System.out.println("File already exists.");
             }
@@ -143,14 +152,17 @@ public class FindingPrimes extends Application {
         
     }
     // print array to file
-    public static void savePrimesToFile(){
-        
+    public static void savePrimesToFile(int newPrimeNumber){
+        String prime = newPrimeNumber + "";
         try{
-            FileWriter primesWriter = new FileWriter("PrimeNumbers.txt");
-            for(int i=0; i<primes.size();i++){
-                primesWriter.write(primes.get(i));
-            }
-            primesWriter.close();
+            //OutputStreamWriter primesWriter = new OutputStreamWriter();
+            FileWriter primesWriter = new FileWriter("PrimeNumbers.txt",true);
+            primesWriter.append(" " + newPrimeNumber + "\n");
+                //primesWriter.flush();
+                //primesWriter.write("This is a message");
+                
+                //primesWriter.write(Integer.toString(newPrimeNumber) + " \n");
+                primesWriter.close();
             
         }catch(IOException e){
             System.out.println("An error Occured");
@@ -164,5 +176,32 @@ public class FindingPrimes extends Application {
     
     
     //read file into array and set number to laregest prime
+
+    private void loadPrimeNumbers() {
+        try{
+            File primeFile = new File("PrimeNumbers.txt");
+            Scanner myReader = new Scanner(primeFile);
+            while(myReader.hasNextLine()){
+                String data =myReader.nextLine().trim();
+                //convert to int and add to array
+                addPrime(Integer.parseInt(data));
+                
+                
+            }
+            myReader.close();
+        }catch(FileNotFoundException e){
+            System.out.println("An error Occured.");
+            e.printStackTrace();
+            
+        }
+        
+    }
+
+    private void setNumber() {
+        this.number = primes.get(primes.size()-1);
+    }
+    
+    
+    
     
 }
